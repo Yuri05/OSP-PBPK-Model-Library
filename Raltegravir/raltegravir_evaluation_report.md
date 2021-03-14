@@ -4,11 +4,11 @@
 
 
 
-| Version                                         | 1.1-OSP9.1                                                   |
+| Version                                         | x.x-OSPy.y                                                   |
 | ----------------------------------------------- | ------------------------------------------------------------ |
-| based on *Model Snapshot* and *Evaluation Plan* | https://github.com/Open-Systems-Pharmacology/Raltegravir-Model/releases/tag/v1.1 |
-| OSP Version                                     | 9.1                                                          |
-| Qualification Framework Version                 | 2.2                                                          |
+| based on *Model Snapshot* and *Evaluation Plan* | https://github.com/Open-Systems-Pharmacology/Raltegravir-Model/releases/tag/vx.x |
+| OSP Version                                     | y.y                                                          |
+| Qualification Framework Version                 | z.z                                                          |
 
 
 
@@ -254,7 +254,7 @@ Below you find the goodness-of-fit visual diagnostic plots for raltegravir PBPK 
 
 ![002_plotGOFMergedResidualsOverTime.png](images/003_3_Results_and_Discussion/002_3_2_Raltegravir_Diagnostics_Plots/002_plotGOFMergedResidualsOverTime.png)
 
-GMFE = 1.487154 
+GMFE = 1.503057 
 
 ## 3.3 Raltegravir Concentration-Time profiles
 Simulated versus observed plasma concentration-time profiles of all data are listed below.

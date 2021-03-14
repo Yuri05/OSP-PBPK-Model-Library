@@ -4,17 +4,18 @@
 
 
 
-| Version                                         | 1.0-OSP9.1                                                   |
+| Version                                         | x.y-OSPx.y                                                   |
 | ----------------------------------------------- | ------------------------------------------------------------ |
 | based on *Model Snapshot* and *Evaluation Plan* | https://github.com/Open-Systems-Pharmacology/Cimetidine-Model/releases/tag/v1.0 |
-| OSP Version                                     | 9.1                                                          |
-| Qualification Framework Version                 | 2.2                                                          |
+| OSP Version                                     | x.y                                                          |
+| Qualification Framework Version                 | x.y                                                          |
 
 
 
 This evaluation report and the corresponding PK-Sim project file are stored at:
 
 https://github.com/Open-Systems-Pharmacology/OSP-PBPK-Model-Library/
+
 # Table of Contents
   * [1 Introduction](#1-introduction)
   * [2 Methods](#2-methods)
@@ -305,7 +306,7 @@ The first plot shows simulated versus observed plasma concentration, the second 
 
 ![002_plotGOFMergedResidualsOverTime.png](images/003_3_Results_and_Discussion/002_3_2_Diagnostics_Plots/002_plotGOFMergedResidualsOverTime.png)
 
-GMFE = 1.530217 
+GMFE = 1.678641 
 
 ## 3.3: Concentration-Time Profiles
 Simulated versus observed concentration-time profiles of all data listed in [Section 2.2.2](#222-Clinical-Data) are presented below.

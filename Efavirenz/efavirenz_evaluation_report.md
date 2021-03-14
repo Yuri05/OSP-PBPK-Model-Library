@@ -2,11 +2,11 @@
 
 
 
-| Version     | 1.0-OSP9.1            |
+| Version     | x.x-OSPy.y            |
 | ----------- | --------------------- |
-| Based on Model Snapshot and Evaluation Plan | https://github.com/Open-Systems-Pharmacology/Efavirenz-Model/releases/tag/v1.0 |
-| OSP Version | 9.1                   |
-| Qualification Framework Version | 2.2                   |
+| Based on Model Snapshot and Evaluation Plan | https://github.com/Open-Systems-Pharmacology/Efavirenz-Model/releases/tag/vx.x |
+| OSP Version | y.y                   |
+| Qualification Framework Version | z.z                   |
 
 
 
@@ -308,7 +308,7 @@ The first plot shows simulated versus observed plasma concentration, the second 
 
 ![002_plotGOFMergedResidualsOverTime.png](images/003_3_Results_and_Discussion/002_3_2_Diagnostics_Plots/002_plotGOFMergedResidualsOverTime.png)
 
-GMFE = 1.445154 
+GMFE = 1.457913 
 
 ## 3.3: Concentration-Time Profiles
 Simulated versus observed concentration-time profiles of all data listed in [Section 2.2.2](#222-Clinical-Data) are presented below.
