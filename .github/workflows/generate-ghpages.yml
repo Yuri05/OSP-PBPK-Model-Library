@@ -31,8 +31,11 @@ jobs:
 
       - name: Build docs structure
         run: |
-          python .github/scripts/build_docs.py \
-            --release-title "${{ github.event.release.name }}"
+          env:
+            RELEASE_TITLE: ${{ github.event.release.name }}
+          run: |
+            python .github/scripts/build_docs.py \
+              --release-title "$RELEASE_TITLE"
 
       - name: Build MkDocs site
         run: mkdocs build --strict
