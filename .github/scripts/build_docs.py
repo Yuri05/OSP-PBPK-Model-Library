@@ -12,6 +12,7 @@ Site features:
 - Home page listing all reports with PDF / pksim5 download links
 """
 
+import argparse
 import os
 import shutil
 import glob
@@ -187,10 +188,13 @@ def process_folder(folder_path: str, folder_name: str) -> dict:
 # Home page (index.md)
 # ──────────────────────────────────────────────────────────────────────────────
 
-def generate_index_md(chapters_data: list, docs_dir: str) -> None:
+def generate_index_md(chapters_data: list, docs_dir: str, release_title: str = "") -> None:
     """Generate docs/index.md listing all compounds with download links."""
+    header = "# Open Systems Pharmacology PBPK Model Library"
+    if release_title:
+        header += f" ({release_title})"
     lines = [
-        "# Open Systems Pharmacology PBPK Model Library",
+        header,
         "",
         "Library of released PBPK substance models and evaluation reports from the"
         " [Open Systems Pharmacology](https://www.open-systems-pharmacology.org/) project.",
@@ -308,6 +312,14 @@ def generate_assets(docs_dir: str) -> None:
 # ──────────────────────────────────────────────────────────────────────────────
 
 def main():
+    parser = argparse.ArgumentParser(description="Build MkDocs documentation site.")
+    parser.add_argument(
+        "--release-title",
+        default="",
+        help="Release title to append in brackets to the home page header.",
+    )
+    args = parser.parse_args()
+
     # Clean and recreate docs dir
     if os.path.exists(DOCS_DIR):
         shutil.rmtree(DOCS_DIR)
@@ -329,7 +341,7 @@ def main():
         chapters_data.append(process_folder(full_path, entry))
 
     # Generate home page listing all reports
-    generate_index_md(chapters_data, DOCS_DIR)
+    generate_index_md(chapters_data, DOCS_DIR, args.release_title)
 
     # Build nav and write mkdocs.yml
     chapters = [ch["name"] for ch in chapters_data]
