@@ -3,7 +3,7 @@ name: Generate GitHub Pages
 on:
   workflow_dispatch:
   release:
-    types: [published]
+    types: [released]
 
 permissions:
   contents: write
@@ -30,12 +30,11 @@ jobs:
             pyyaml
 
       - name: Build docs structure
+        env:
+          RELEASE_TITLE: ${{ github.event.release.name }}
         run: |
-          env:
-            RELEASE_TITLE: ${{ github.event.release.name }}
-          run: |
-            python .github/scripts/build_docs.py \
-              --release-title "$RELEASE_TITLE"
+          python .github/scripts/build_docs.py \
+            --release-title "$RELEASE_TITLE"
 
       - name: Build MkDocs site
         run: mkdocs build --strict
