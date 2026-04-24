@@ -188,13 +188,10 @@ def process_folder(folder_path: str, folder_name: str) -> dict:
 # Home page (index.md)
 # ──────────────────────────────────────────────────────────────────────────────
 
-def generate_index_md(chapters_data: list, docs_dir: str, release_title: str = "") -> None:
+def generate_index_md(chapters_data: list, docs_dir: str) -> None:
     """Generate docs/index.md listing all compounds with download links."""
-    header = "# Open Systems Pharmacology PBPK Model Library"
-    if release_title:
-        header += f" ({release_title})"
     lines = [
-        header,
+        "# Open Systems Pharmacology PBPK Model Library",
         "",
         "Library of released PBPK substance models and evaluation reports from the"
         " [Open Systems Pharmacology](https://www.open-systems-pharmacology.org/) project.",
@@ -239,12 +236,14 @@ def build_nav(chapters: list) -> list:
     return nav
 
 
-def generate_mkdocs_yml(nav: list) -> None:
+def generate_mkdocs_yml(nav: list, release_title: str = "") -> None:
     """Write the mkdocs.yml configuration file."""
     nav_yaml  = yaml.dump({"nav": nav}, default_flow_style=False, allow_unicode=True)
     nav_block = nav_yaml[len("nav:"):].rstrip()
 
     content = f"""site_name: Open Systems Pharmacology PBPK Model Library
+    if release_title:
+        content += f" ({release_title})"
 site_description: Library of released PBPK substance models and evaluation reports
 docs_dir: docs
 site_dir: site
@@ -341,12 +340,12 @@ def main():
         chapters_data.append(process_folder(full_path, entry))
 
     # Generate home page listing all reports
-    generate_index_md(chapters_data, DOCS_DIR, args.release_title)
+    generate_index_md(chapters_data, DOCS_DIR)
 
     # Build nav and write mkdocs.yml
     chapters = [ch["name"] for ch in chapters_data]
     nav      = build_nav(chapters)
-    generate_mkdocs_yml(nav)
+    generate_mkdocs_yml(nav, args.release_title)
 
     print(f"Docs built: {len(chapters)} chapters → {DOCS_DIR}")
     print(f"MkDocs config written → {MKDOCS_YML}")
