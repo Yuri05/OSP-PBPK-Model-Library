@@ -2,6 +2,12 @@ name: Generate GitHub Pages
 
 on:
   workflow_dispatch:
+    inputs:
+      release_title:
+        description: 'Release title for the documentation'
+        required: false
+        type: string
+        default: ''
   release:
     types: [released]
 
@@ -13,8 +19,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set environment variables
+        id: set-vars
+        run: |
+          # Set RELEASE_TITLE based on trigger type
+          if [ "${{ github.event_name }}" = "release" ]; then
+            echo "RELEASE_TITLE=${{ github.event.release.name }}" >> $GITHUB_ENV
+            echo "TAG_OR_BRANCH=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TRIMMED_TITLE=$(echo "${{ inputs.release_title }}" | xargs)
+            if [ -z "$TRIMMED_TITLE" ]; then
+              echo "Error: release_title input is required when manually triggering the workflow"
+              exit 1
+            fi
+            echo "RELEASE_TITLE=$TRIMMED_TITLE" >> $GITHUB_ENV
+            echo "TAG_OR_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -31,10 +56,12 @@ jobs:
 
       - name: Build docs structure
         env:
-          RELEASE_TITLE: ${{ github.event.release.name }}
+          RELEASE_TITLE: ${{ env.RELEASE_TITLE }}
         run: |
           python .github/scripts/build_docs.py \
-            --release-title "$RELEASE_TITLE"
+            --release-title "$RELEASE_TITLE" \
+            --tag-or-branch "${{ env.TAG_OR_BRANCH }}" \
+            --repository-name "${{ github.repository }}"
 
       - name: Build MkDocs site
         run: mkdocs build --strict
