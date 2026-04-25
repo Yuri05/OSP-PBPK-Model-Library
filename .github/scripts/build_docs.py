@@ -10,6 +10,7 @@ Site features:
 - Hamburger navigation menu on all screen sizes (replaces top nav-tabs)
 - Floating sidebar table of contents on every report page
 - Home page listing all reports with PDF / pksim5 download links
+- SEO optimizations with meta tags, structured data, and semantic HTML
 """
 
 import argparse
@@ -167,11 +168,29 @@ def process_folder(folder_path: str, folder_name: str) -> dict:
     if md_files:
         with open(sorted(md_files)[0], "r", encoding="utf-8") as fh:
             content = fh.read()
+
+        # Add SEO frontmatter if not present
+        if not content.startswith("---"):
+            seo_frontmatter = f"""---
+title: {folder_name} PBPK Model - Physiologically Based Pharmacokinetic Evaluation Report
+description: PBPK (Physiologically Based Pharmacokinetic) model qualification and evaluation report for {folder_name}. Detailed pharmacokinetic modeling and simulation results using Open Systems Pharmacology platform.
+keywords: {folder_name}, PBPK model, physiologically based pharmacokinetic model, {folder_name} pharmacokinetics, drug modeling, PK-Sim
+---
+
+"""
+            content = seo_frontmatter + content
+
         with open(dest_md, "w", encoding="utf-8") as fh:
             fh.write(content)
     else:
         with open(dest_md, "w", encoding="utf-8") as fh:
-            fh.write(f"# {folder_name}\n")
+            fh.write(f"""---
+title: {folder_name} PBPK Model
+description: PBPK model evaluation for {folder_name}
+---
+
+# {folder_name}
+""")
 
     return {
         "name":        folder_name,
@@ -185,14 +204,34 @@ def process_folder(folder_path: str, folder_name: str) -> dict:
 # ──────────────────────────────────────────────────────────────────────────────
 
 def generate_index_md(chapters_data: list, docs_dir: str, repository_name: str, tag_or_branch: str) -> None:
-    """Generate docs/index.md listing all compounds with download links."""
+    """Generate docs/index.md listing all compounds with download links and SEO metadata."""
     lines = [
+        "---",
+        "title: Open Systems Pharmacology PBPK Model Library - Physiologically Based Pharmacokinetic Models",
+        "description: Comprehensive library of validated PBPK (Physiologically Based Pharmacokinetic) models and qualification reports for drug development. Open-source whole-body PBPK modeling and simulation software for systems biology and multiscale physiological modeling.",
+        "keywords: PBPK, Physiologically based pharmacokinetic modelling, PBPK model, Qualification of PBPK Platform, Modeling and simulation software, PBPK Modeling and simulation software, Whole-body physiologically based pharmacokinetic modeling, Systems biology, Multiscale physiological modeling and simulation, PK-Sim, pharmacokinetics, drug development",
+        "---",
+        "",
         "# Open Systems Pharmacology PBPK Model Library",
         "",
-        "Library of released PBPK substance models and evaluation reports from the"
-        " [Open Systems Pharmacology](https://www.open-systems-pharmacology.org/) project.",
+        "## Physiologically Based Pharmacokinetic (PBPK) Modeling Platform for Drug Development",
         "",
-        "## Available Reports",
+        "This comprehensive library provides **validated PBPK (Physiologically Based Pharmacokinetic) models** and detailed qualification reports from the"
+        " [Open Systems Pharmacology](https://www.open-systems-pharmacology.org/) project. Our PBPK modeling and simulation software enables "
+        "**whole-body physiologically based pharmacokinetic modeling** for pharmaceutical research, drug development, and systems biology applications.",
+        "",
+        "### About PBPK Modeling",
+        "",
+        "**Physiologically based pharmacokinetic (PBPK) modeling** is a mechanistic modeling approach that integrates physiological, physicochemical, "
+        "and biochemical data to predict drug disposition throughout the body. This **multiscale physiological modeling and simulation** platform supports:",
+        "",
+        "- Drug-drug interaction (DDI) predictions",
+        "- Pediatric dose extrapolation",
+        "- Special population pharmacokinetics",
+        "- Regulatory submission support (Qualification of PBPK Platform)",
+        "- Systems biology and quantitative systems pharmacology (QSP)",
+        "",
+        "## Available PBPK Models and Qualification Reports",
         "",
         "| Compound (HTML Report) | PDF Report | PK-Sim Project File(s) |",
         "|------------------------|:----------:|:----------------------:|",
@@ -235,7 +274,7 @@ def build_nav(chapters: list) -> list:
 
 
 def generate_mkdocs_yml(nav: list, release_title: str = "") -> None:
-    """Write the mkdocs.yml configuration file."""
+    """Write the mkdocs.yml configuration file with SEO optimizations."""
     nav_yaml  = yaml.dump({"nav": nav}, default_flow_style=False, allow_unicode=True)
     nav_block = nav_yaml[len("nav:"):].rstrip()
 
@@ -244,12 +283,17 @@ def generate_mkdocs_yml(nav: list, release_title: str = "") -> None:
         site_name += f" ({release_title})"
 
     content = f"""site_name: "{site_name}"
-site_description: Library of released PBPK substance models and evaluation reports
+site_description: "Comprehensive library of validated PBPK (Physiologically Based Pharmacokinetic) models and qualification reports for drug development. Open-source whole-body PBPK modeling and simulation software for systems biology and multiscale physiological modeling."
+site_url: https://open-systems-pharmacology.github.io/OSP-PBPK-Model-Library/
+site_author: Open Systems Pharmacology Community
+copyright: Copyright &copy; Open Systems Pharmacology
 docs_dir: docs
 site_dir: site
 
 theme:
   name: material
+  language: en
+  custom_dir: overrides
   palette:
     - scheme: default
       primary: blue
@@ -266,15 +310,37 @@ theme:
   features:
     - navigation.sections
     - navigation.top
+    - navigation.tabs.sticky
+    - navigation.indexes
     - toc.follow
     - search.highlight
     - search.suggest
+    - search.share
     - content.code.copy
   icon:
     repo: fontawesome/brands/github
 
+repo_url: https://github.com/Open-Systems-Pharmacology/OSP-PBPK-Model-Library
+repo_name: OSP-PBPK-Model-Library
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Open-Systems-Pharmacology
+      name: Open Systems Pharmacology on GitHub
+    - icon: fontawesome/solid/globe
+      link: https://www.open-systems-pharmacology.org/
+      name: Open Systems Pharmacology Website
+  generator: false
+
 extra_css:
   - stylesheets/extra.css
+
+plugins:
+  - search:
+      lang: en
+      separator: '[\\s\\-,:!=\\[\\]()\"/]+|\\.(?!\\d)|&[lg]t;'
+  - meta-descriptions
 
 markdown_extensions:
   - attr_list
@@ -285,7 +351,15 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - toc:
       permalink: true
+      permalink_title: Anchor link to this section for reference
       toc_depth: 3
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.details
+  - md_in_html
+  - abbr
+  - def_list
 
 nav:{nav_block}
 """
@@ -299,11 +373,120 @@ nav:{nav_block}
 # ──────────────────────────────────────────────────────────────────────────────
 
 def generate_assets(docs_dir: str) -> None:
-    """Write extra CSS into docs/stylesheets/extra.css."""
+    """Write extra CSS and HTML overrides for SEO."""
+    # Write extra CSS into docs/stylesheets/extra.css
     css_dir = os.path.join(docs_dir, "stylesheets")
     os.makedirs(css_dir, exist_ok=True)
     with open(os.path.join(css_dir, "extra.css"), "w", encoding="utf-8") as fh:
         fh.write(EXTRA_CSS)
+
+    # Create overrides directory for custom HTML templates
+    overrides_dir = os.path.join(REPO_ROOT, "overrides")
+    os.makedirs(overrides_dir, exist_ok=True)
+
+    # Generate robots.txt in docs root
+    robots_txt = """User-agent: *
+Allow: /
+
+Sitemap: https://open-systems-pharmacology.github.io/OSP-PBPK-Model-Library/sitemap.xml
+"""
+    with open(os.path.join(docs_dir, "robots.txt"), "w", encoding="utf-8") as fh:
+        fh.write(robots_txt)
+
+    # Generate main.html with structured data
+    structured_data_script = """
+{% extends "base.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ page.canonical_url }}">
+  <meta property="og:title" content="{{ page.title | default(config.site_name, true) }}">
+  <meta property="og:description" content="{{ page.meta.description | default(config.site_description, true) }}">
+  <meta property="og:site_name" content="{{ config.site_name }}">
+  <meta property="og:image" content="https://www.open-systems-pharmacology.org/assets/images/logo.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="{{ page.canonical_url }}">
+  <meta name="twitter:title" content="{{ page.title | default(config.site_name, true) }}">
+  <meta name="twitter:description" content="{{ page.meta.description | default(config.site_description, true) }}">
+  <meta name="twitter:image" content="https://www.open-systems-pharmacology.org/assets/images/logo.png">
+
+  <!-- Structured Data (JSON-LD) for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": {{ config.site_name | tojson }},
+    "description": {{ config.site_description | tojson }},
+    "url": {{ config.site_url | tojson }},
+    "publisher": {
+      "@type": "Organization",
+      "name": "Open Systems Pharmacology",
+      "url": "https://www.open-systems-pharmacology.org/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.open-systems-pharmacology.org/assets/images/logo.png"
+      }
+    },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {{ (config.site_url ~ '?q={search_term_string}') | tojson }},
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  {% if page and page.meta and page.meta.title %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "{{ page.meta.title | default(page.title, true) }}",
+    "description": "{{ page.meta.description | default('PBPK model documentation', true) }}",
+    "author": {
+      "@type": "Organization",
+      "name": "Open Systems Pharmacology"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Open Systems Pharmacology",
+      "url": "https://www.open-systems-pharmacology.org/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.open-systems-pharmacology.org/assets/images/logo.png"
+      }
+    },
+    "url": "{{ page.canonical_url }}",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "{{ page.canonical_url }}"
+    },
+    "keywords": "{{ page.meta.keywords | default('PBPK, physiologically based pharmacokinetic modeling, drug development', true) }}"
+  }
+  </script>
+  {% endif %}
+
+  <!-- Additional Meta Tags for Keywords -->
+  {% if page.meta.keywords %}
+  <meta name="keywords" content="{{ page.meta.keywords }}">
+  {% endif %}
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="{{ page.canonical_url }}">
+
+  <!-- Language -->
+  <meta http-equiv="content-language" content="en">
+  <meta name="language" content="English">
+
+{% endblock %}
+"""
+
+    with open(os.path.join(overrides_dir, "main.html"), "w", encoding="utf-8") as fh:
+        fh.write(structured_data_script)
 
 
 # ──────────────────────────────────────────────────────────────────────────────
