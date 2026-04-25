@@ -402,17 +402,17 @@ Sitemap: https://open-systems-pharmacology.github.io/OSP-PBPK-Model-Library/site
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="{{ page.canonical_url }}">
-  <meta property="og:title" content="{{ page.title | default(config.site_name, true) }}">
-  <meta property="og:description" content="{{ page.meta.description | default(config.site_description, true) }}">
+  <meta property="og:url" content="{{ page.canonical_url if page else config.site_url }}">
+  <meta property="og:title" content="{{ page.title | default(config.site_name, true) if page else config.site_name }}">
+  <meta property="og:description" content="{{ page.meta.description if page and page.meta and page.meta.description else config.site_description }}">
   <meta property="og:site_name" content="{{ config.site_name }}">
   <meta property="og:image" content="https://www.open-systems-pharmacology.org/assets/images/logo.png">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="{{ page.canonical_url }}">
-  <meta name="twitter:title" content="{{ page.title | default(config.site_name, true) }}">
-  <meta name="twitter:description" content="{{ page.meta.description | default(config.site_description, true) }}">
+  <meta name="twitter:url" content="{{ page.canonical_url if page else config.site_url }}">
+  <meta name="twitter:title" content="{{ page.title | default(config.site_name, true) if page else config.site_name }}">
+  <meta name="twitter:description" content="{{ page.meta.description if page and page.meta and page.meta.description else config.site_description }}">
   <meta name="twitter:image" content="https://www.open-systems-pharmacology.org/assets/images/logo.png">
 
   <!-- Structured Data (JSON-LD) for SEO -->
@@ -470,13 +470,13 @@ Sitemap: https://open-systems-pharmacology.github.io/OSP-PBPK-Model-Library/site
   </script>
   {% endif %}
 
-  <!-- Additional Meta Tags for Keywords -->
-  {% if page.meta.keywords %}
+  {% if page and page.meta and page.meta.keywords %}
   <meta name="keywords" content="{{ page.meta.keywords }}">
   {% endif %}
 
-  <!-- Canonical URL -->
+  {% if page %}
   <link rel="canonical" href="{{ page.canonical_url }}">
+  {% endif %}
 
   <!-- Language -->
   <meta http-equiv="content-language" content="en">
