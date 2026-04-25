@@ -17,6 +17,7 @@ import os
 import shutil
 import glob
 import yaml
+import re
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 DOCS_DIR = os.path.join(REPO_ROOT, "docs")
@@ -132,6 +133,52 @@ def is_compound_folder(path: str) -> bool:
             return True
     return False
 
+
+def convert_bare_urls_to_markdown_links(content: str) -> str:
+    """Convert bare URLs to markdown links.
+
+    Converts bare URLs (not already in markdown link format) to clickable links.
+    For example: https://github.com/example becomes [https://github.com/example](https://github.com/example)
+
+    Args:
+        content: Markdown content with potential bare URLs
+
+    Returns:
+        Content with bare URLs converted to markdown links
+    """
+    # Pattern to match URLs that are NOT already in markdown link format
+    # This matches URLs that are:
+    # 1. Not preceded by ]( (which would indicate they're already the target of a link)
+    # 2. Not preceded by [ (which would indicate they're the text part of a link)
+    # The pattern captures http:// or https:// URLs followed by non-whitespace characters
+
+    # First, protect URLs that are already in markdown link format [text](URL)
+    # by temporarily replacing them with placeholders
+    protected_links = []
+    def protect_link(match):
+        protected_links.append(match.group(0))
+        return f"___PROTECTED_LINK_{len(protected_links)-1}___"
+
+    # Protect [text](URL) format
+    content = re.sub(r'\[([^\]]+)\]\(([^\)]+)\)', protect_link, content)
+
+    # Now convert bare URLs to markdown links
+    # Match http:// or https:// followed by non-whitespace characters (but not markdown special chars that would break the link)
+    # We need to be careful to stop at whitespace, closing parentheses, or end of line
+    def convert_url(match):
+        url = match.group(0)
+        return f'[{url}]({url})'
+
+    # Match URLs, being careful about boundaries
+    # This pattern matches URLs but stops at whitespace, closing parens, or end of line
+    content = re.sub(r'https?://[^\s\)\]]+', convert_url, content)
+
+    # Restore protected links
+    for i, link in enumerate(protected_links):
+        content = content.replace(f"___PROTECTED_LINK_{i}___", link)
+
+    return content
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Per-compound processing
 # ──────────────────────────────────────────────────────────────────────────────
@@ -167,6 +214,8 @@ def process_folder(folder_path: str, folder_name: str) -> dict:
     if md_files:
         with open(sorted(md_files)[0], "r", encoding="utf-8") as fh:
             content = fh.read()
+        # Convert bare URLs to markdown links
+        content = convert_bare_urls_to_markdown_links(content)
         with open(dest_md, "w", encoding="utf-8") as fh:
             fh.write(content)
     else:
