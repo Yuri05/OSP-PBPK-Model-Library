@@ -284,8 +284,8 @@ def generate_mkdocs_yml(nav: list, release_title: str = "") -> None:
 
     content = f"""site_name: "{site_name}"
 site_description: "Comprehensive library of validated PBPK (Physiologically Based Pharmacokinetic) models and qualification reports for drug development. Open-source whole-body PBPK modeling and simulation software for systems biology and multiscale physiological modeling."
-site_url: https://yuri05.github.io/OSP-PBPK-Model-Library/
-site_author: Open Systems Pharmacology
+site_url: https://open-systems-pharmacology.github.io/OSP-PBPK-Model-Library/
+site_author: Open Systems Pharmacology Community
 copyright: Copyright &copy; Open Systems Pharmacology
 docs_dir: docs
 site_dir: site
