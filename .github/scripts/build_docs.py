@@ -313,7 +313,6 @@ theme:
     - navigation.tabs.sticky
     - navigation.indexes
     - toc.follow
-    - toc.integrate
     - search.highlight
     - search.suggest
     - search.share
@@ -341,7 +340,7 @@ plugins:
   - search:
       lang: en
       separator: '[\\s\\-,:!=\\[\\]()\"/]+|\\.(?!\\d)|&[lg]t;'
-  - meta
+  - meta-descriptions
 
 markdown_extensions:
   - attr_list
@@ -407,21 +406,23 @@ Sitemap: https://open-systems-pharmacology.github.io/OSP-PBPK-Model-Library/site
   <meta property="og:title" content="{{ page.title | default(config.site_name, true) }}">
   <meta property="og:description" content="{{ page.meta.description | default(config.site_description, true) }}">
   <meta property="og:site_name" content="{{ config.site_name }}">
+  <meta property="og:image" content="https://www.open-systems-pharmacology.org/assets/images/logo.png">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="{{ page.canonical_url }}">
   <meta name="twitter:title" content="{{ page.title | default(config.site_name, true) }}">
   <meta name="twitter:description" content="{{ page.meta.description | default(config.site_description, true) }}">
+  <meta name="twitter:image" content="https://www.open-systems-pharmacology.org/assets/images/logo.png">
 
   <!-- Structured Data (JSON-LD) for SEO -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "{{ config.site_name }}",
-    "description": "{{ config.site_description }}",
-    "url": "{{ config.site_url }}",
+    "name": {{ config.site_name | tojson }},
+    "description": {{ config.site_description | tojson }},
+    "url": {{ config.site_url | tojson }},
     "publisher": {
       "@type": "Organization",
       "name": "Open Systems Pharmacology",
@@ -433,7 +434,7 @@ Sitemap: https://open-systems-pharmacology.github.io/OSP-PBPK-Model-Library/site
     },
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "{{ config.site_url }}?q={search_term_string}",
+      "target": {{ (config.site_url ~ '?q={search_term_string}') | tojson }},
       "query-input": "required name=search_term_string"
     }
   }
