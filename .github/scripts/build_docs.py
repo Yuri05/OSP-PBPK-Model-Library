@@ -325,7 +325,7 @@ def main():
     parser.add_argument(
         "--repository-name",
         required=True,
-        help="Repository name including user (e.g., 'Yuri05/OSP-PBPK-Model-Library').",
+        help="Repository name including user (e.g., 'Open-Systems-Pharmacology/OSP-PBPK-Model-Library').",
     )
     args = parser.parse_args()
 
