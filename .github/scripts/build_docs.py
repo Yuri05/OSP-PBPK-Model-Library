@@ -241,9 +241,11 @@ def generate_mkdocs_yml(nav: list, release_title: str = "") -> None:
     nav_yaml  = yaml.dump({"nav": nav}, default_flow_style=False, allow_unicode=True)
     nav_block = nav_yaml[len("nav:"):].rstrip()
 
-    content = f"""site_name: Open Systems Pharmacology PBPK Model Library
+    site_name = "Open Systems Pharmacology PBPK Model Library"
     if release_title:
-        content += f" ({release_title})"
+        site_name += f" ({release_title})"
+
+    content = f"""site_name: "{site_name}"
 site_description: Library of released PBPK substance models and evaluation reports
 docs_dir: docs
 site_dir: site
