@@ -57,10 +57,11 @@ jobs:
       - name: Build docs structure
         env:
           RELEASE_TITLE: ${{ env.RELEASE_TITLE }}
+          TAG_OR_BRANCH: ${{ env.TAG_OR_BRANCH }}
         run: |
           python .github/scripts/build_docs.py \
             --release-title "$RELEASE_TITLE" \
-            --tag-or-branch "${{ env.TAG_OR_BRANCH }}" \
+            --tag-or-branch "$TAG_OR_BRANCH" \
             --repository-name "${{ github.repository }}"
 
       - name: Build MkDocs site
