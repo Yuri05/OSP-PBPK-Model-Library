@@ -389,7 +389,7 @@ def generate_assets(docs_dir: str) -> None:
     robots_txt = """User-agent: *
 Allow: /
 
-Sitemap: https://yuri05.github.io/OSP-PBPK-Model-Library/sitemap.xml
+Sitemap: https://open-systems-pharmacology.github.io/OSP-PBPK-Model-Library/sitemap.xml
 """
     with open(os.path.join(docs_dir, "robots.txt"), "w", encoding="utf-8") as fh:
         fh.write(robots_txt)
