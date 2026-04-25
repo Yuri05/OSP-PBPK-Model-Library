@@ -220,17 +220,6 @@ def generate_index_md(chapters_data: list, docs_dir: str, repository_name: str, 
         " [Open Systems Pharmacology](https://www.open-systems-pharmacology.org/) project. Our PBPK modeling and simulation software enables "
         "**whole-body physiologically based pharmacokinetic modeling** for pharmaceutical research, drug development, and systems biology applications.",
         "",
-        "### About PBPK Modeling",
-        "",
-        "**Physiologically based pharmacokinetic (PBPK) modeling** is a mechanistic modeling approach that integrates physiological, physicochemical, "
-        "and biochemical data to predict drug disposition throughout the body. This **multiscale physiological modeling and simulation** platform supports:",
-        "",
-        "- Drug-drug interaction (DDI) predictions",
-        "- Pediatric dose extrapolation",
-        "- Special population pharmacokinetics",
-        "- Regulatory submission support (Qualification of PBPK Platform)",
-        "- Systems biology and quantitative systems pharmacology (QSP)",
-        "",
         "## Available PBPK Models and Qualification Reports",
         "",
         "| Compound (HTML Report) | PDF Report | PK-Sim Project File(s) |",
@@ -278,7 +267,7 @@ def generate_mkdocs_yml(nav: list, release_title: str = "") -> None:
     nav_yaml  = yaml.dump({"nav": nav}, default_flow_style=False, allow_unicode=True)
     nav_block = nav_yaml[len("nav:"):].rstrip()
 
-    site_name = "Open Systems Pharmacology PBPK Model Library"
+    site_name = "OSP PBPK Model Library"
     if release_title:
         site_name += f" ({release_title})"
 
