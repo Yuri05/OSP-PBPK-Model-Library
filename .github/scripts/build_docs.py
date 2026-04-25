@@ -214,10 +214,10 @@ def generate_index_md(chapters_data: list, docs_dir: str, repository_name: str, 
         "",
         "# Open Systems Pharmacology PBPK Model Library",
         "",
-        "## Physiologically Based Pharmacokinetic (PBPK) Modeling Platform for Drug Development",
+        "## Physiologically Based Pharmacokinetic (PBPK) and Quantitative Systems Pharmacology (QSP) Modeling Platform for Drug Development",
         "",
-        "This comprehensive library provides **validated PBPK (Physiologically Based Pharmacokinetic) models** and detailed qualification reports from the"
-        " [Open Systems Pharmacology](https://www.open-systems-pharmacology.org/) project. Our PBPK modeling and simulation software enables "
+        "This comprehensive library provides **validated PBPK (Physiologically Based Pharmacokinetic) models** and detailed model evaluation reports from the"
+        " [Open Systems Pharmacology](https://www.open-systems-pharmacology.org/) project. Our PBPK and QSP modeling and simulation software (including PK-Sim® and MoBi®) enables "
         "**whole-body physiologically based pharmacokinetic modeling** for pharmaceutical research, drug development, and systems biology applications.",
         "",
         "## Available PBPK Models and Qualification Reports",
