@@ -157,12 +157,8 @@ def process_folder(folder_path: str, folder_name: str) -> dict:
             shutil.rmtree(dest_images)
         shutil.copytree(images_dir, dest_images)
 
-    # Copy binary assets
-    for pdf in pdf_files:
-        shutil.copy2(pdf, dest)
-    for pksim in pksim_files:
-        shutil.copy2(pksim, dest)
-
+    # DO NOT copy PDF and pksim5 files - we'll use GitHub raw links instead
+    # Just collect their basenames
     pdf_basenames   = sorted(os.path.basename(p) for p in pdf_files)
     pksim_basenames = sorted(os.path.basename(p) for p in pksim_files)
 
@@ -188,7 +184,7 @@ def process_folder(folder_path: str, folder_name: str) -> dict:
 # Home page (index.md)
 # ──────────────────────────────────────────────────────────────────────────────
 
-def generate_index_md(chapters_data: list, docs_dir: str) -> None:
+def generate_index_md(chapters_data: list, docs_dir: str, repository_name: str, tag_or_branch: str) -> None:
     """Generate docs/index.md listing all compounds with download links."""
     lines = [
         "# Open Systems Pharmacology PBPK Model Library",
@@ -206,13 +202,15 @@ def generate_index_md(chapters_data: list, docs_dir: str) -> None:
         name = ch["name"]
         base = f"{name}/"
 
+        # Generate GitHub raw links for PDF files
         pdf_cell = " ".join(
-            f'[:material-file-pdf-box: {pdf}]({base}{pdf}){{: download="{pdf}" }}'
+            f'[:material-file-pdf-box: {pdf}](https://raw.githubusercontent.com/{repository_name}/{tag_or_branch}/{name}/{pdf}){{: download="{pdf}" }}'
             for pdf in ch["pdf_files"]
         ) or "—"
 
+        # Generate GitHub raw links for pksim5 files
         pksim_cell = " ".join(
-            f'[:material-download: {pksim}]({base}{pksim}){{: download="{pksim}" }}'
+            f'[:material-download: {pksim}](https://raw.githubusercontent.com/{repository_name}/{tag_or_branch}/{name}/{pksim}){{: download="{pksim}" }}'
             for pksim in ch["pksim_files"]
         ) or "—"
 
@@ -319,6 +317,16 @@ def main():
         default="",
         help="Release title to append in brackets to the home page header.",
     )
+    parser.add_argument(
+        "--tag-or-branch",
+        required=True,
+        help="Tag or branch name for generating GitHub raw links.",
+    )
+    parser.add_argument(
+        "--repository-name",
+        required=True,
+        help="Repository name including user (e.g., 'Open-Systems-Pharmacology/OSP-PBPK-Model-Library').",
+    )
     args = parser.parse_args()
 
     # Clean and recreate docs dir
@@ -342,7 +350,7 @@ def main():
         chapters_data.append(process_folder(full_path, entry))
 
     # Generate home page listing all reports
-    generate_index_md(chapters_data, DOCS_DIR)
+    generate_index_md(chapters_data, DOCS_DIR, args.repository_name, args.tag_or_branch)
 
     # Build nav and write mkdocs.yml
     chapters = [ch["name"] for ch in chapters_data]
