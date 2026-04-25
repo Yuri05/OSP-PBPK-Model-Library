@@ -283,6 +283,7 @@ theme:
   name: material
   language: en
   custom_dir: overrides
+  favicon: favicon.ico
   palette:
     - scheme: default
       primary: blue
@@ -368,6 +369,12 @@ def generate_assets(docs_dir: str) -> None:
     os.makedirs(css_dir, exist_ok=True)
     with open(os.path.join(css_dir, "extra.css"), "w", encoding="utf-8") as fh:
         fh.write(EXTRA_CSS)
+
+    # Copy favicon from .github/assets to docs root
+    favicon_src = os.path.join(REPO_ROOT, ".github", "assets", "favicon.ico")
+    if os.path.exists(favicon_src):
+        favicon_dest = os.path.join(docs_dir, "favicon.ico")
+        shutil.copy2(favicon_src, favicon_dest)
 
     # Create overrides directory for custom HTML templates
     overrides_dir = os.path.join(REPO_ROOT, "overrides")
