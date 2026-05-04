@@ -5,7 +5,7 @@ name: Generate GitHub Pages
 # Build the docs locally
 #
 # pip install mkdocs mkdocs-material pymdown-extensions mkdocs-meta-descriptions-plugin pyyaml
-# python .github/scripts/build_docs.py --tag-or-branch develop --repository-name "Open-Systems-Pharmacology/OSP-Qualification-Reports" --release-title "Version 1.2.3"
+# python .github/scripts/build_docs.py --tag-or-branch develop --repository-name "Open-Systems-Pharmacology/OSP-PBPK-Model-Library" --release-title "Version 1.2.3"
 # python -m mkdocs build --strict
 # python -m mkdocs serve --strict  # local preview
 #
